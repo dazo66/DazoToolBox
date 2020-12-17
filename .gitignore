@@ -1,0 +1,10 @@
+# Project exclude paths
+/.gradle/
+/build/
+/.idea/
+*.iml
+/out/
+local.properties
+/src/test/
+/classes/
+/data/
