@@ -1,5 +1,10 @@
 package com.dazo66.utils.app
 
-class App(private val name: String, private val path: String, , private val policy: LaunchPolicy) {
+class App(val name: String,
+          val path: String,
+          val dataPath: String,
+          val policy: LaunchPolicy) {
+
+    val thread: AppThread = AppThread(this)
 
 }
