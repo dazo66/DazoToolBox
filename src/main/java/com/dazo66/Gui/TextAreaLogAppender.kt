@@ -1,6 +1,6 @@
 package com.dazo66.Gui
 
-import com.dazo66.utils.LoggerProcess
+import com.dazo66.utils.app.LoggerProcess
 import kotlinx.coroutines.delay
 import java.io.IOException
 import java.util.*

@@ -1,5 +1,6 @@
 package com.dazo66.utils
 
+import com.dazo66.utils.app.LoggerProcess
 import org.apache.commons.logging.LogFactory
 import java.io.PrintStream
 

@@ -2,10 +2,12 @@ package com.dazo66
 
 import com.dazo66.Gui.GuiFrame
 import com.dazo66.utils.InstanceControl
-import com.dazo66.utils.LoggerProcess
-import com.dazo66.utils.LoggerProcess.Companion.TEXT_AREA_LOGGER
+import com.dazo66.utils.app.LoggerProcess
+import com.dazo66.utils.app.LoggerProcess.Companion.TEXT_AREA_LOGGER
 import com.dazo66.utils.StdOutErrRedirect
 import com.dazo66.utils.TimeUtil.TimeTaskPool
+import com.dazo66.utils.app.AppsManager
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.apache.log4j.Logger
 import java.io.File
@@ -37,10 +39,13 @@ class DazoTools {
         fun main(args: Array<String>) {
             StdOutErrRedirect.redirectSystemOutAndErrToLog()
             javax.swing.SwingUtilities.invokeLater { DazoTools() }
-            process = LoggerProcess("huanfengLiveRecord", "java -Dfile" +
-                    ".encoding=UTF_8 -jar BiliLiveRecorder.jar  " + "\"options=config" +
-                    ".json&liver=huya&&id=131394&qn=-1\"", File("data/BilibiliLiveRecord" + ".v2.12.0/"))
-            runBlocking { process!!.setLoop(true) }
+            var appsManager = AppsManager()
+            runBlocking {
+                while (true) {
+                    appsManager.check()
+                    delay(1000)
+                }
+            }
 
 
         }

@@ -24,8 +24,8 @@ fun getPolicy(rawPolicy: String): LaunchPolicy {
 
 fun getArgs(rawPolicy: String): List<String> {
     var rawArgs =  rawPolicy.subSequence(
-            rawPolicy.indexOf("(", 0, false) + 1,
-            rawPolicy.indexOf(")", 0, false))
+            rawPolicy.indexOf("[", 0, false) + 1,
+            rawPolicy.indexOf("]", 0, false))
     rawArgs = rawArgs.replace(" ".toRegex(), "")
     if (rawArgs.isBlank()) {
         return emptyList()
