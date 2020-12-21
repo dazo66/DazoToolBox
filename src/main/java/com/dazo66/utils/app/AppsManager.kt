@@ -17,6 +17,11 @@ class AppsManager private constructor() {
         private var logger: Logger = Logger.getLogger(TEXT_AREA_LOGGER)
         val appDiscover = AppDiscover()
         val instance = Singleton.getInstance()
+
+        private fun info(msg: String, app : App) {
+            logger.info("[$app.name] $msg")
+        }
+
         class Singleton private constructor() {
             companion object {
                 private val appsManager = AppsManager()
@@ -36,21 +41,21 @@ class AppsManager private constructor() {
             if (app.isAlive() && app.isAble.get()) {
                 info = tryGetLine(app.process.scanner!!)
                 if (!info.isBlank()) {
-                    logger.info(info)
+                    info(info, app)
                 }
                 info = tryGetLine(app.process.errorScanner!!)
                 if (!info.isBlank()) {
-                    logger.info(info)
+                    info(info, app)
                 }
             } else if (!tryGetLine(app.process.scanner!!).also { info = it }.isBlank()) {
-                logger.info(info)
+                info(info, app)
                 while (!tryGetLine(app.process.scanner!!).also { info = it }.isBlank()) {
-                    logger.info(info)
+                    info(info, app)
                 }
             }else if (!tryGetLine(app.process.errorScanner!!).also { info = it }.isBlank()) {
-                logger.info(info)
+                info(info, app)
                 while (!tryGetLine(app.process.errorScanner!!).also { info = it }.isBlank()) {
-                    logger.info(info)
+                    info(info, app)
                 }
             } else if (app.isAble.get() && app.policy.canRun()) {
                 app.reStart()

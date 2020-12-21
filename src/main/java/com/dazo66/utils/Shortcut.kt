@@ -11,8 +11,14 @@ import java.net.URLDecoder
 object Shortcut {
     private val logger = Logger.getLogger(Shortcut::class.java)
     private var startupPath: String =
-            "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp\\"
+            "C:\\Users\\admin\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"
     private var shortcutName: String = "DazoTools-Shortcut"
+
+    init {
+        if (System.getProperty("os.name").indexOf("windows 7") != -1) {
+            startupPath = "C:\\Users\\admin\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
+        }
+    }
 
     val isAutoStart: Boolean
         get() = File("$startupPath$shortcutName.lnk").exists()
