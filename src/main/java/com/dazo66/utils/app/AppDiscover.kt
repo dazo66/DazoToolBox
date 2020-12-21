@@ -69,7 +69,13 @@ class AppDiscover {
             name1 = splited1[1]
         }
 
-        return App(name1, file.absolutePath, appDataDir + file.name
-                , file.lastModified(), getPolicy(rowPolicy1), file.name)
+        return App(name1, file.absolutePath, ((appDataDir + file.name).let { s ->
+            s.substring(0, s.lastIndexOf(".").let { i ->
+                if (i > 0) {
+                    i
+                } else {
+                    s.length
+                }
+        }) }), file.lastModified(), getPolicy(rowPolicy1), file.name)
     }
 }

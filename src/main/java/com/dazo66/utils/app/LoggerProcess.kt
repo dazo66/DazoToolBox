@@ -10,18 +10,20 @@ import java.util.*
  */
 class LoggerProcess(name: String, command: String, dir: File)  {
 
-    val scanner: Scanner
-    val errorScanner: Scanner
+    var scanner: Scanner? = null
+    var errorScanner: Scanner? = null
     private var process: Process? = null
 
     init {
         if (process != null) {
             process!!.destroy()
         }
-        process = tryExec(command, dir)!!
+        process = tryExec(command, dir)
         logger = Logger.getLogger(name)
-        scanner = Scanner(process!!.inputStream, "GB18030")
-        errorScanner = Scanner(process!!.errorStream, "GB18030")
+        if (process != null) {
+            scanner = Scanner(process!!.inputStream, "GB18030")
+            errorScanner = Scanner(process!!.errorStream, "GB18030")
+        }
 
 
     }

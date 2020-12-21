@@ -42,7 +42,9 @@ class DazoTools {
             val appsManager = AppsManager.instance
             runBlocking {
                 while (true) {
-                    appsManager.check()
+                    try {
+                        appsManager.check()
+                    } catch (e : Exception) {}
                     delay(1000)
                 }
             }

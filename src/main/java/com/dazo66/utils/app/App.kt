@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
+import java.lang.Exception
 import java.util.concurrent.atomic.AtomicBoolean
 
 class App(val name: String,
@@ -36,7 +37,12 @@ class App(val name: String,
 
         val fileReader = FileReader(conf)
         var jsonParser = JsonParser()
-        confObject = jsonParser.parse(IOUtils.toString(fileReader)) as JsonObject
+        try {
+            confObject = jsonParser.parse(IOUtils.toString(fileReader)) as JsonObject
+        } catch (e : Exception) {
+            confObject = JsonObject()
+            save()
+        }
         if (confObject.get("isAble") != null) {
             isAble.set(confObject.get("isAble").asBoolean)
         }
@@ -44,7 +50,12 @@ class App(val name: String,
 
     fun setConf(key: String, o : Any) {
         confObject.add(key, gson.toJsonTree(o))
+        save()
+    }
+
+    fun save(){
         IOUtils.write(gson.toJson(confObject), FileWriter(File(dataPath + "/app.conf")))
+
     }
 
     fun reStart(){
@@ -54,10 +65,12 @@ class App(val name: String,
 
     fun disable(){
         process.exit()
+        isAble.set(false)
         setConf("isAble", false)
     }
 
     fun enable() {
+        isAble.set(true)
         reStart()
         setConf("isAble", true)
     }

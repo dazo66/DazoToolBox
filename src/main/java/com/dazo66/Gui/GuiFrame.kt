@@ -30,9 +30,22 @@ class GuiFrame(private val core: DazoTools) : JFrame("DazoTools") {
         val itmOpenConfig = MenuItem("打开控制台")
         itmOpenConfig.font = font
         val itmAutoStart = MenuItem("\u5f00\u673a\u81ea\u542f  " + if (Shortcut.isAutoStart) "\u2713" else "\u2717")
-        val appsMenu = PopupMenu().also {
+        val appsMenu1 = getAppsMenu()
+        itmAutoStart.font = font
+        itmExit.addActionListener { this.exit() }
+        itmOpenConfig.addActionListener { this.isVisible = !this.isVisible }
+        itmAutoStart.addActionListener { Shortcut.run(this) }
+        it.add(itmOpenConfig)
+        it.add(itmAutoStart)
+        it.add(appsMenu1)
+        it.add(itmExit)
+    }
+
+    private fun getAppsMenu():PopupMenu {
+        return PopupMenu().also {
             it.label = "应用列表"
             it.name = "应用列表"
+            val font = Font("Default", Font.PLAIN, 14)
             it.font = font
             for (app in AppsManager.instance.apps) {
                 it.add(PopupMenu(app.name).also {
@@ -55,14 +68,6 @@ class GuiFrame(private val core: DazoTools) : JFrame("DazoTools") {
                 })
             }
         }
-        itmAutoStart.font = font
-        itmExit.addActionListener { this.exit() }
-        itmOpenConfig.addActionListener { this.isVisible = !this.isVisible }
-        itmAutoStart.addActionListener { Shortcut.run(this) }
-        it.add(itmOpenConfig)
-        it.add(itmAutoStart)
-        it.add(appsMenu)
-        it.add(itmExit)
     }
 
     init {
@@ -131,7 +136,11 @@ class GuiFrame(private val core: DazoTools) : JFrame("DazoTools") {
                 }
                 override fun mousePressed(e: MouseEvent?) {
                     when (e?.button) {
-                        3 -> this@GuiFrame.popmenu.getItem(1).label = getShortcutLabel()
+                        3 -> {
+                            this@GuiFrame.popmenu.getItem(1).label = getShortcutLabel()
+                            this@GuiFrame.popmenu.remove(this@GuiFrame.popmenu.getItem(2))
+                            this@GuiFrame.popmenu.insert(getAppsMenu(), 2)
+                        }
                     }
                 }
 

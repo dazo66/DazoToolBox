@@ -34,25 +34,25 @@ class AppsManager private constructor() {
         for (app in apps) {
             var info : String
             if (app.isAlive() && app.isAble.get()) {
-                info = tryGetLine(app.process.scanner)
+                info = tryGetLine(app.process.scanner!!)
                 if (!info.isBlank()) {
                     logger.info(info)
                 }
-                info = tryGetLine(app.process.errorScanner)
+                info = tryGetLine(app.process.errorScanner!!)
                 if (!info.isBlank()) {
                     logger.info(info)
                 }
-            } else if (!tryGetLine(app.process.scanner).also { info = it }.isBlank()) {
+            } else if (!tryGetLine(app.process.scanner!!).also { info = it }.isBlank()) {
                 logger.info(info)
-                while (!tryGetLine(app.process.scanner).also { info = it }.isBlank()) {
+                while (!tryGetLine(app.process.scanner!!).also { info = it }.isBlank()) {
                     logger.info(info)
                 }
-            }else if (!tryGetLine(app.process.errorScanner).also { info = it }.isBlank()) {
+            }else if (!tryGetLine(app.process.errorScanner!!).also { info = it }.isBlank()) {
                 logger.info(info)
-                while (!tryGetLine(app.process.errorScanner).also { info = it }.isBlank()) {
+                while (!tryGetLine(app.process.errorScanner!!).also { info = it }.isBlank()) {
                     logger.info(info)
                 }
-            } else if (app.policy.canRun()) {
+            } else if (app.isAble.get() && app.policy.canRun()) {
                 app.reStart()
             }
         }
