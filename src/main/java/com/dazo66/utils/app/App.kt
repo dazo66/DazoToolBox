@@ -1,6 +1,13 @@
 package com.dazo66.utils.app
 
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import org.apache.commons.io.IOUtils
 import java.io.File
+import java.io.FileReader
+import java.io.FileWriter
+import java.util.concurrent.atomic.AtomicBoolean
 
 class App(val name: String,
           val path: String,
@@ -9,18 +16,50 @@ class App(val name: String,
           val policy: LaunchPolicy,
           val rowName: String) {
 
+    var isAble = AtomicBoolean(true)
+    var process: LoggerProcess = LoggerProcess(name, path, File(dataPath))
+    private var confObject : JsonObject
+    private var gson = GsonBuilder().setPrettyPrinting().create()
+
     init {
         val path = File(dataPath)
         if (!path.exists()) {
             path.mkdirs()
         }
+        val conf = File(dataPath + "/app.conf")
+        if (!conf.exists()) {
+            conf.createNewFile()
+            val fileWriter = FileWriter(conf)
+            fileWriter.write("{}")
+            fileWriter.close()
+        }
+
+        val fileReader = FileReader(conf)
+        var jsonParser = JsonParser()
+        confObject = jsonParser.parse(IOUtils.toString(fileReader)) as JsonObject
+        if (confObject.get("isAble") != null) {
+            isAble.set(confObject.get("isAble").asBoolean)
+        }
     }
 
-    var process: LoggerProcess = LoggerProcess(name, path, File(dataPath))
+    fun setConf(key: String, o : Any) {
+        confObject.add(key, gson.toJsonTree(o))
+        IOUtils.write(gson.toJson(confObject), FileWriter(File(dataPath + "/app.conf")))
+    }
 
     fun reStart(){
         process.exit()
         process = LoggerProcess(name, path, File(dataPath))
+    }
+
+    fun disable(){
+        process.exit()
+        setConf("isAble", false)
+    }
+
+    fun enable() {
+        reStart()
+        setConf("isAble", true)
     }
 
     fun stop() {

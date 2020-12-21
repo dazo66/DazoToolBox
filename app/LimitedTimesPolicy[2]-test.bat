@@ -5,3 +5,4 @@
 @echo. 4
 @echo.
 @echo.
+pause

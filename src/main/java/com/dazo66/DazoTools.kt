@@ -39,7 +39,7 @@ class DazoTools {
         fun main(args: Array<String>) {
             StdOutErrRedirect.redirectSystemOutAndErrToLog()
             javax.swing.SwingUtilities.invokeLater { DazoTools() }
-            var appsManager = AppsManager()
+            val appsManager = AppsManager.instance
             runBlocking {
                 while (true) {
                     appsManager.check()

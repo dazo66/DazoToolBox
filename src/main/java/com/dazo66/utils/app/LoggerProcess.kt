@@ -35,16 +35,15 @@ class LoggerProcess(name: String, command: String, dir: File)  {
 
     fun exit() {
         try {
-            scanner.close()
-        } catch (e: Exception) {
-        }
-        try {
-
-            errorScanner.close()
-        } catch (e: Exception) {
-        }
-        try {
             process?.destroy()
+        } catch (e: Exception) {
+        }
+        try {
+            org.apache.commons.io.IOUtils.closeQuietly(scanner)
+        } catch (e: Exception) {
+        }
+        try {
+            org.apache.commons.io.IOUtils.closeQuietly(scanner)
         } catch (e: Exception) {
         }
     }

@@ -10,14 +10,22 @@ import kotlin.collections.ArrayList
 /**
  * @author Dazo66
  */
-class AppsManager {
+class AppsManager private constructor() {
 
     companion object {
         const val TEXT_AREA_LOGGER: String = "textArea"
         private var logger: Logger = Logger.getLogger(TEXT_AREA_LOGGER)
+        val appDiscover = AppDiscover()
+        val instance = Singleton.getInstance()
+        class Singleton private constructor() {
+            companion object {
+                private val appsManager = AppsManager()
+                fun getInstance(): AppsManager {
+                    return appsManager
+                }
+            }
+        }
     }
-
-    val appDiscover = AppDiscover()
     var apps: List<App> = appDiscover.scanApp(ArrayList())
     val timeLimiter = SimpleTimeLimiter()
 
@@ -25,7 +33,7 @@ class AppsManager {
         apps = appDiscover.scanApp(apps as MutableList<App>)
         for (app in apps) {
             var info : String
-            if (app.isAlive()) {
+            if (app.isAlive() && app.isAble.get()) {
                 info = tryGetLine(app.process.scanner)
                 if (!info.isBlank()) {
                     logger.info(info)
@@ -60,13 +68,12 @@ class AppsManager {
                         }
                         return@Callable ""
                     }
-                    , 100L, TimeUnit.MILLISECONDS, false)
+                    , 10L, TimeUnit.MILLISECONDS, false)
         } catch (e : Exception) {
             line = ""
         }
         return line
     }
-
 
 
 

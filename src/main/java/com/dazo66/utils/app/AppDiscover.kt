@@ -68,6 +68,7 @@ class AppDiscover {
             rowPolicy1 = splited1[0]
             name1 = splited1[1]
         }
+
         return App(name1, file.absolutePath, appDataDir + file.name
                 , file.lastModified(), getPolicy(rowPolicy1), file.name)
     }
