@@ -20,7 +20,6 @@ class DazoTools {
     var pool: TimeTaskPool = TimeTaskPool()
 
     fun exit(i: Int) {
-        process!!.exit()
         exitProcess(i)
     }
 
@@ -29,9 +28,6 @@ class DazoTools {
     }
 
     companion object {
-
-        private var process: LoggerProcess? = null
-
         private val logger = Logger.getLogger(TEXT_AREA_LOGGER)
 
         @Throws(IOException::class)

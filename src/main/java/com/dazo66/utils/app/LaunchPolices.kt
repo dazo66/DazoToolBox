@@ -1,5 +1,6 @@
 package com.dazo66.utils.app
 
+import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -12,6 +13,8 @@ fun getPolicy(rawPolicy: String): LaunchPolicy {
     if (rawPolicy.startsWith("LimitedTimesPolicy", true)) {
         if (!args.isEmpty()) {
             return LimitedTimesPolicy(args[0].toInt())
+        } else {
+            return LimitedTimesPolicy(1)
         }
     }
 
@@ -23,6 +26,9 @@ fun getPolicy(rawPolicy: String): LaunchPolicy {
 }
 
 fun getArgs(rawPolicy: String): List<String> {
+    if (rawPolicy.isBlank()) {
+        return Collections.emptyList()
+    }
     var rawArgs =  rawPolicy.subSequence(
             rawPolicy.indexOf("[", 0, false) + 1,
             rawPolicy.indexOf("]", 0, false))

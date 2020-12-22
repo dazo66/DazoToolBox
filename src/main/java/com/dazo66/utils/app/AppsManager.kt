@@ -19,7 +19,7 @@ class AppsManager private constructor() {
         val instance = Singleton.getInstance()
 
         private fun info(msg: String, app : App) {
-            logger.info("[$app.name] $msg")
+            logger.info("[${app.name}] $msg")
         }
 
         class Singleton private constructor() {
@@ -37,43 +37,26 @@ class AppsManager private constructor() {
     fun check(){
         apps = appDiscover.scanApp(apps as MutableList<App>)
         for (app in apps) {
-            var info : String
             if (app.isAlive() && app.isAble.get()) {
-                info = tryGetLine(app.process.scanner!!)
-                if (!info.isBlank()) {
-                    info(info, app)
-                }
-                info = tryGetLine(app.process.errorScanner!!)
-                if (!info.isBlank()) {
-                    info(info, app)
-                }
-            } else if (!tryGetLine(app.process.scanner!!).also { info = it }.isBlank()) {
-                info(info, app)
-                while (!tryGetLine(app.process.scanner!!).also { info = it }.isBlank()) {
-                    info(info, app)
-                }
-            }else if (!tryGetLine(app.process.errorScanner!!).also { info = it }.isBlank()) {
-                info(info, app)
-                while (!tryGetLine(app.process.errorScanner!!).also { info = it }.isBlank()) {
-                    info(info, app)
-                }
+                tryGetLine(app, app.process.scanner!!)
+                tryGetLine(app, app.process.errorScanner!!)
             } else if (app.isAble.get() && app.policy.canRun()) {
                 app.reStart()
             }
         }
     }
 
-    fun tryGetLine(scanner: Scanner): String {
+    fun tryGetLine(app: App, scanner: Scanner): String {
         var line : String
         try {
             line = timeLimiter.callWithTimeout(
                     Callable {
                         while (scanner.hasNextLine()) {
-                            return@Callable scanner.nextLine()
+                            info(scanner.nextLine(), app)
                         }
                         return@Callable ""
                     }
-                    , 10L, TimeUnit.MILLISECONDS, false)
+                    , 500L, TimeUnit.MILLISECONDS, false)
         } catch (e : Exception) {
             line = ""
         }
