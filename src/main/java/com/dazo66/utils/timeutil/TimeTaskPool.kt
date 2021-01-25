@@ -1,4 +1,4 @@
-package com.dazo66.utils.TimeUtil
+package com.dazo66.utils.timeutil
 
 import org.apache.log4j.Logger
 import java.util.*

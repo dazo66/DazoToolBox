@@ -47,7 +47,7 @@ class AppDiscover {
                 returnApp.add(buildApp(file))
             } else {
                 if (app.updateDate != file.lastModified()) {
-                    app.stop()
+                    app.exit()
                     oldApps.remove(app)
                     returnApp.add(buildApp(file))
                 }
@@ -64,7 +64,7 @@ class AppDiscover {
         if (splited1.size == 1) {
             rowPolicy1 = ""
             name1 = splited1[0]
-        } else if (splited1.size == 2) {
+        } else {
             rowPolicy1 = splited1[0]
             name1 = splited1[1]
         }

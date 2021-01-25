@@ -1,5 +1,6 @@
 package com.dazo66.utils.app
 
+import com.dazo66.DazoTools.Companion.TEXT_AREA_LOGGER
 import com.google.common.util.concurrent.SimpleTimeLimiter
 import org.apache.log4j.Logger
 import java.util.*
@@ -13,13 +14,16 @@ import kotlin.collections.ArrayList
 class AppsManager private constructor() {
 
     companion object {
-        const val TEXT_AREA_LOGGER: String = "textArea"
         private var logger: Logger = Logger.getLogger(TEXT_AREA_LOGGER)
         val appDiscover = AppDiscover()
         val instance = Singleton.getInstance()
 
         private fun info(msg: String, app : App) {
             logger.info("[${app.name}] $msg")
+        }
+
+        private fun error(msg: String, app : App) {
+            logger.error("[${app.name}] $msg")
         }
 
         class Singleton private constructor() {
@@ -32,35 +36,42 @@ class AppsManager private constructor() {
         }
     }
     var apps: List<App> = appDiscover.scanApp(ArrayList())
-    val timeLimiter = SimpleTimeLimiter()
+    private val timeLimiter = SimpleTimeLimiter()
 
     fun check(){
         apps = appDiscover.scanApp(apps as MutableList<App>)
         for (app in apps) {
             if (app.isAlive() && app.isAble.get()) {
-                tryGetLine(app, app.process.scanner!!)
-                tryGetLine(app, app.process.errorScanner!!)
+                tryGetLine(app, app.process.scanner!!, true)
+                tryGetLine(app, app.process.errorScanner!!, false)
             } else if (app.isAble.get() && app.policy.canRun()) {
+                tryGetLine(app, app.process.scanner!!, true)
+                tryGetLine(app, app.process.errorScanner!!, false)
                 app.reStart()
             }
         }
     }
 
-    fun tryGetLine(app: App, scanner: Scanner): String {
-        var line : String
+    fun tryGetLine(app: App, scanner: Scanner, isInfo: Boolean) {
         try {
-            line = timeLimiter.callWithTimeout(
+            timeLimiter.callWithTimeout (
                     Callable {
-                        while (scanner.hasNextLine()) {
-                            info(scanner.nextLine(), app)
+                        try {
+                            while (scanner.hasNextLine()) {
+                                if (isInfo) {
+                                    info(scanner.nextLine(), app)
+                                } else {
+                                    error(scanner.nextLine(), app)
+                                }
+                            }
+                        } catch (e: Exception) {
+                            //ignore
                         }
                         return@Callable ""
                     }
                     , 500L, TimeUnit.MILLISECONDS, false)
         } catch (e : Exception) {
-            line = ""
         }
-        return line
     }
 
 

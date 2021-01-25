@@ -1,12 +1,10 @@
-package com.dazo66.utils.TimeUtil
+package com.dazo66.utils.timeutil
 
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.apache.log4j.Logger
-import sun.plugin.extension.ExtensionUtils
-import sun.plugin2.liveconnect.JSExceptions
 
 /**
  * @author Dazo66

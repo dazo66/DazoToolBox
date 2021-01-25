@@ -1,4 +1,4 @@
-package com.dazo66.utils.TimeUtil
+package com.dazo66.utils.timeutil
 
 import java.util.Calendar
 import java.util.Date

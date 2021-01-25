@@ -1,12 +1,12 @@
 package com.dazo66.utils
 
-import com.dazo66.utils.app.LoggerProcess
+import com.dazo66.DazoTools.Companion.TEXT_AREA_LOGGER
 import org.apache.commons.logging.LogFactory
 import java.io.PrintStream
 
 
 object StdOutErrRedirect {
-    private val logger = LogFactory.getLog(LoggerProcess.TEXT_AREA_LOGGER)
+    private val logger = LogFactory.getLog(TEXT_AREA_LOGGER)
 
     fun redirectSystemOutAndErrToLog() {
         val printStreamForOut = createLoggingWrapper(System.out, false)

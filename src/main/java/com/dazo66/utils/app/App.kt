@@ -75,7 +75,7 @@ class App(val name: String,
         setConf("isAble", true)
     }
 
-    fun stop() {
+    fun exit() {
         process.exit()
     }
 

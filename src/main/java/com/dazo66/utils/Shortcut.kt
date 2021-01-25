@@ -1,6 +1,6 @@
 package com.dazo66.utils
 
-import com.dazo66.Gui.GuiFrame
+import com.dazo66.gui.MainGui
 import org.apache.log4j.Logger
 import java.io.File
 import java.io.FileOutputStream
@@ -23,7 +23,7 @@ object Shortcut {
     val isAutoStart: Boolean
         get() = File("$startupPath$shortcutName.lnk").exists()
 
-    fun run(frame: GuiFrame) {
+    fun run(frame: MainGui) {
         if (isAutoStart) {
             File("$startupPath$shortcutName.lnk").delete()
             val itmAutoStart = frame.tray!!.trayIcons[0].popupMenu.getItem(1)

@@ -1,13 +1,11 @@
-package com.dazo66.Gui
+package com.dazo66.gui
 
-import org.apache.log4j.Appender
 import org.apache.log4j.Logger
 import org.apache.log4j.WriterAppender
 
 import java.io.IOException
 import java.io.PipedReader
 import java.io.PipedWriter
-import java.io.Writer
 
 /**
  *

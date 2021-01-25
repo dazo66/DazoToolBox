@@ -1,7 +1,11 @@
 package com.dazo66.utils.app
 
+import com.dazo66.DazoTools.Companion.TEXT_AREA_LOGGER
+import com.dazo66.utils.ProcessUtils
+import kotlinx.coroutines.runBlocking
 import org.apache.commons.io.IOUtils
 import org.apache.log4j.Logger
+import sun.java2d.loops.ProcessPath
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -38,23 +42,25 @@ class LoggerProcess(name: String, command: String, dir: File)  {
     }
 
     fun exit() {
-        try {
-            process?.destroy()
-        } catch (e: Exception) {
-        }
-        try {
-            org.apache.commons.io.IOUtils.closeQuietly(scanner)
-        } catch (e: Exception) {
-        }
-        try {
-            org.apache.commons.io.IOUtils.closeQuietly(scanner)
-        } catch (e: Exception) {
+        if(isAlive()) {
+            try {
+                ProcessUtils.killProcess(process!!)
+            } catch (e: Exception) {
+            } finally {
+            }
+            try {
+                org.apache.commons.io.IOUtils.closeQuietly(scanner)
+            } catch (e: Exception) {
+            }
+            try {
+                org.apache.commons.io.IOUtils.closeQuietly(scanner)
+            } catch (e: Exception) {
+            }
         }
     }
 
     companion object {
 
-        const val TEXT_AREA_LOGGER: String = "textArea"
         private var logger: Logger = Logger.getLogger(TEXT_AREA_LOGGER)
 
         fun tryExec(command: String, dir: File): Process? {

@@ -1,23 +1,22 @@
 package com.dazo66
 
-import com.dazo66.Gui.GuiFrame
+import com.dazo66.gui.GuiModel
+import com.dazo66.gui.MainGui
+import com.dazo66.gui.TextAreaLogAppender
 import com.dazo66.utils.InstanceControl
-import com.dazo66.utils.app.LoggerProcess
-import com.dazo66.utils.app.LoggerProcess.Companion.TEXT_AREA_LOGGER
 import com.dazo66.utils.StdOutErrRedirect
-import com.dazo66.utils.TimeUtil.TimeTaskPool
+import com.dazo66.utils.timeutil.TimeTaskPool
 import com.dazo66.utils.app.AppsManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.apache.log4j.Logger
-import java.io.File
-import java.io.IOException
 import kotlin.system.exitProcess
 
 class DazoTools {
+
     private val instanceControl: InstanceControl = InstanceControl(this, 27890)
-    var frame: GuiFrame = GuiFrame(this)
-    var pool: TimeTaskPool = TimeTaskPool()
+
+    var pool = TimeTaskPool()
 
     fun exit(i: Int) {
         exitProcess(i)
@@ -27,16 +26,21 @@ class DazoTools {
         instanceControl.start()
     }
 
-    companion object {
-        private val logger = Logger.getLogger(TEXT_AREA_LOGGER)
 
-        @Throws(IOException::class)
+
+    companion object {
+        const val TEXT_AREA_LOGGER: String = "textArea"
+        private val logger = Logger.getLogger(TEXT_AREA_LOGGER)
+        fun exit() {
+            System.exit(0)
+        }
         @JvmStatic
         fun main(args: Array<String>) {
             StdOutErrRedirect.redirectSystemOutAndErrToLog()
-            javax.swing.SwingUtilities.invokeLater { DazoTools() }
+            MainGui(GuiModel())
             val appsManager = AppsManager.instance
             runBlocking {
+                logger.info(TextAreaLogAppender.FLAG)
                 while (true) {
                     try {
                         appsManager.check()
@@ -44,8 +48,6 @@ class DazoTools {
                     delay(1000)
                 }
             }
-
-
         }
     }
 
